@@ -1,0 +1,102 @@
+2024.11.25-10.08.20 AILiveSim Version:1.9.7
+
+2024.11.25-10.08.20 Unloading Subscene MeasuringWall
+
+2024.11.25-10.08.20 Loading Subscene DefaultProps
+
+2024.11.25-10.08.20 Loading plugin: ALSExtraVehicles.pak
+
+2024.11.25-10.08.21 Loading plugin: ABoat.pak
+
+2024.11.25-10.08.21 Loading Subscene Layout1
+
+2024.11.25-10.08.21 Loading Subscene SituationLoader
+
+2024.11.25-10.08.21 Loading plugin: ALSExtraVehicles
+
+2024.11.25-10.08.21 Loading plugin: ABoat
+
+2024.11.25-10.09.43 While loading E:/AILiveSim_1_9_7/./ConfigFiles/Scenario/Default_Scenario.xml, reset random seed to 1
+
+2024.11.25-10.09.43 Loading scenarion with seed: 1
+
+2024.11.25-10.09.43 Added: Instructions to be UNLOADED later
+
+
+2024.11.25-10.09.43 Added: DefaultProps to be UNLOADED later
+
+
+2024.11.25-10.09.43 Added: Layout1 to be UNLOADED later
+
+
+2024.11.25-10.09.43 Added: SituationLoader to be UNLOADED later
+
+
+2024.11.25-10.09.43 Added: Layout2 to be LOADED later
+
+
+2024.11.25-10.09.43 Sea state: DefaultBlueSea will be loaded later
+
+
+2024.11.25-10.09.43 Weather: AfternoonClear will be loaded later
+
+
+2024.11.25-10.09.43 Starting async task
+
+2024.11.25-10.09.43 Unloading Subscene Instructions
+
+2024.11.25-10.09.43 Unloading Subscene Layout1
+
+2024.11.25-10.09.43 Unloading Subscene MeasuringWall
+
+2024.11.25-10.09.43 Loading Subscene DefaultProps
+
+2024.11.25-10.09.43 Loading Subscene SituationLoader
+
+2024.11.25-10.09.43 Loading Subscene Layout2
+
+2024.11.25-10.09.43 Loading SeaState DefaultBlueSea
+
+2024.11.25-10.09.43 Loading Weather AfternoonClear
+
+2024.11.25-10.09.43 Starting situation overrides
+
+2024.11.25-10.09.44 Starting async task
+
+2024.11.25-10.09.44 Unloading Subscene MeasuringWall
+
+2024.11.25-10.09.44 LoadingSituationLayer: DemoSensors
+
+E:/AILiveSim_1_9_7/ConfigFiles/EgoVehicleSettings/DemoAllSensors.SensorProfile.ini  --->  12 sensor/sensors found.
+2024.11.25-10.09.44 Created socket Sensor_13 127.0.0.1 8880
+
+2024.11.25-10.09.44 Created socket Sensor_12 127.0.0.1 8881
+
+2024.11.25-10.09.44 Created socket Sensor_11 127.0.0.1 8882
+
+2024.11.25-10.09.44 Created socket Sensor_8 127.0.0.1 8884
+
+2024.11.25-10.09.44 Created socket Sensor_9 127.0.0.1 8885
+
+2024.11.25-10.09.44 Created socket Sensor_5 127.0.0.1 8886
+
+2024.11.25-10.09.44 Created socket Sensor_14 127.0.0.1 8887
+
+2024.11.25-10.09.44 Created socket Sensor_15 127.0.0.1 8888
+
+2024.11.25-10.09.44 Created socket Sensor_6 127.0.0.1 8891
+
+2024.11.25-10.09.44 COnnection to RemoteControlled socket port 0
+
+2024.11.25-10.09.44 Created socket Sensor_2 127.0.0.1 8883
+
+2024.11.25-10.09.44 Restoring overriden files
+
+2024.11.25-10.09.44 Camerasettings failed to parse "TargetGamma" - not yet supported
+
+2024.11.25-10.09.44 Camerasettings failed to parse "TargetGamma" - not yet supported
+
+2024.11.25-10.09.44 Camerasettings failed to parse "TargetGamma" - not yet supported
+
+2024.11.25-10.09.48 Error Sending TCP message ..  closing socket port 8881
+
