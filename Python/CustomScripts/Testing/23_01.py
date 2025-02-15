@@ -44,12 +44,12 @@ def visualize_clusters(points, labels, save_image=False):
     
     # Define custom colors for clusters
     custom_colors = {
-        0: [1, 1, 1],  # White
-        1: [1, 1, 1],  # White
+        0: [1, 0, 0],  # red
+        1: [0, 1, 0],  # green
         2: [0, 0, 1],  # Blue
         3: [1, 1, 0],  # Yellow
         4: [1, 0, 1],  # Magenta
-        5: [1, 1, 1],  # White
+        5: [0, 1, 1],  # cyan
         6: [0.5, 0, 0],  # Dark Red
         7: [0, 0.5, 0],  # Dark Green
         8: [0, 0, 0.5],  # Dark Blue
@@ -102,7 +102,7 @@ def visualize_clusters(points, labels, save_image=False):
 def main():
     # Read data from file
     base_path = r"E:\AILiveSim_1_9_7\SensorData\pcl"
-    file_path = os.path.join(base_path, "8.750.pcd")
+    file_path = os.path.join(base_path, "pcl0.pcd")
     points = read_point_cloud_data(file_path)
     
     # Define the bounding box of the boat

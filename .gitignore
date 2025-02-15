@@ -5,3 +5,9 @@ StartServerandClients.bat
 configworksspace*
 LaunchWindowed.bat
 Logs/
+License/
+Engine/
+AILiveSim/
+.venv/
+Config/
+project_course*
