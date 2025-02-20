@@ -209,7 +209,7 @@ def lidar_processing_thread():
     # Persistent tracking variables
     tracked_clusters = {}  # persistent_id -> last known centroid
     next_cluster_id = 0
-    max_tracking_distance = 100.0
+    max_tracking_distance = 200
 
     # Custom colors for initial persistent IDs.
     custom_colors = {
