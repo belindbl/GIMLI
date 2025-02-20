@@ -14,6 +14,8 @@ import os
 import queue
 from sklearn.cluster import DBSCAN
 
+#TODO: Optimise LIDAR processing (DBSCAN alternatives?) and implement LIDAR-to-image projection
+
 # Global settings and shared objects
 HOST = '127.0.0.1'
 stop_threads_event = threading.Event()
