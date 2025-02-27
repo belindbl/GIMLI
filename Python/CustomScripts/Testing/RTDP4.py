@@ -158,7 +158,7 @@ def yolo_inference_thread():
         except queue.Empty:
             continue
         processed_img = process_frame(frame, model)
-        ALSImg.JustDisplay(processed_img)
+        #ALSImg.JustDisplay(processed_img)
 
 #############################
 # Camera Functions          #
