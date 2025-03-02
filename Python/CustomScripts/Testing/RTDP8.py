@@ -60,6 +60,13 @@ def apply_clahe(image):
     # Convert back to BGR color space
     return cv2.cvtColor(merged, cv2.COLOR_LAB2BGR)
 
+def gamma_correction(image, gamma=1.5):
+    # Build a lookup table
+    invGamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** invGamma) * 255
+                      for i in range(256)]).astype("uint8")
+    return cv2.LUT(image, table)
+
 ######################################
 # New Thread: Overlay LiDAR on Camera
 ######################################
@@ -68,7 +75,9 @@ def overlay_lidar_on_camera_thread():
     This thread fetches the latest camera image and LiDAR data,
     projects the LiDAR 3D points onto the 2D image using camera calibration,
     and overlays the points onto the image.
-    It now uses the YOLO-processed image output if available.
+    It now clusters the valid LiDAR points using DBSCAN and uses the cluster labels for coloring.
+    Additionally, for each cluster, it computes the centroid (centric dot)
+    and displays the distance and horizontal direction (angle) on top of the object.
     """
     # Define camera calibration parameters
     image_width, image_height = 720, 480
@@ -115,31 +124,83 @@ def overlay_lidar_on_camera_thread():
             point_array = np.frombuffer(pointCloudData, dtype=np.float32)
             point_array = np.reshape(point_array, (-1, 4))
             points = point_array[:, :3]  # Use only x, y, z
-            
+            intensity = point_array[:, 3]  # Extract intensity
+
             # Project 3D points to camera image plane
             num_points = points.shape[0]
-            points_hom = np.hstack((points, np.ones((num_points, 1))))
+            points_hom = np.hstack((points, np.ones((num_points, 1))))  # Convert to homogeneous coords
             points_cam_hom = (T @ points_hom.T).T
             points_cam = points_cam_hom[:, :3]
-            
+
             # Keep points with positive depth
             valid_mask = points_cam[:, 2] > 0
             points_cam = points_cam[valid_mask]
+            intensity = intensity[valid_mask]
+
             if points_cam.shape[0] == 0:
                 time.sleep(0.05)
                 continue
+
+            # Run DBSCAN clustering on the original valid 3D points (world coordinates)
+            valid_points = points[valid_mask]
+            dbscan = DBSCAN(eps=200, min_samples=4)
+            labels = dbscan.fit_predict(valid_points)
+
+            # Project onto 2D image
             proj = (K @ points_cam.T).T
             proj[:, 0] /= proj[:, 2]
             proj[:, 1] /= proj[:, 2]
             proj_points = proj[:, :2]
 
-            # Overlay projected LiDAR points onto the image (red circles)
-            for pt in proj_points:
+            # Define cluster colors (same as used in the 3D visualization)
+            custom_colors = {
+                0: (0, 0, 255),    # Red
+                1: (0, 255, 0),    # Green
+                2: (255, 0, 0),    # Blue
+                3: (255, 255, 0),  # Yellow
+                4: (255, 0, 255),  # Magenta
+                5: (0, 255, 255),  # Cyan
+                -1: (100, 100, 100)  # Noise points (gray)
+            }
+
+            # Overlay projected points with their cluster colors
+            for i, pt in enumerate(proj_points):
                 x, y = int(round(pt[0])), int(round(pt[1]))
                 if 0 <= x < img.shape[1] and 0 <= y < img.shape[0]:
-                    cv2.circle(img, (x, y), 2, (0, 0, 255), thickness=-1)
+                    cluster_label = labels[i] if i < len(labels) else -1
+                    color = custom_colors.get(cluster_label, (255, 255, 255))  # Default white
+                    cv2.circle(img, (x, y), 2, color, thickness=-1)
             
-            # Display the resulting image
+            # --- New Code: Display distance and direction for each cluster ---
+            # Compute centroids for each cluster using the valid 3D points and DBSCAN labels.
+            def compute_cluster_centroids(filtered_points, labels):
+                centroids = {}
+                for label in np.unique(labels):
+                    if label == -1:
+                        continue
+                    indices = np.where(labels == label)[0]
+                    centroids[label] = filtered_points[indices].mean(axis=0)
+                return centroids
+
+            centroids = compute_cluster_centroids(valid_points, labels)
+            for label, centroid in centroids.items():
+                # Project centroid to camera image:
+                centroid_hom = np.hstack((centroid, 1))
+                centroid_cam_hom = T @ centroid_hom
+                centroid_cam = centroid_cam_hom[:3]
+                proj_centroid = K @ centroid_cam
+                proj_centroid[0] /= proj_centroid[2]
+                proj_centroid[1] /= proj_centroid[2]
+                x_c, y_c = int(round(proj_centroid[0])), int(round(proj_centroid[1]))
+                # Compute Euclidean distance in camera coordinates
+                distance = np.linalg.norm(centroid_cam)
+                # Compute horizontal angle (in degrees) relative to the optical axis
+                angle = np.degrees(np.arctan(centroid_cam[0] / centroid_cam[2]))
+                text = f"d:{distance:.1f}m, a:{angle:.1f}°"
+                cv2.putText(img, text, (x_c, y_c), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+            # --- End New Code ---
+
+            # Display the resulting clustered LiDAR projection with annotations
             ALSImg.JustDisplay(img)
         except Exception as e:
             print("Overlay LiDAR on camera error:", e)
@@ -407,7 +468,7 @@ def lidar_data_reader():
 #############################
 if __name__ == "__main__":
     TestContext.client.connect()
-    TestContext.client.request_load_scenario('Aboat')
+    TestContext.client.request_load_scenario('AboatICT')
     time.sleep(1)
 
     sensorlist = TestContext.client.get_sensor_list()
