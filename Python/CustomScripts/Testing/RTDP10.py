@@ -1,4 +1,4 @@
-# TODO attempt to make the clustering algorithm distance-agnostic
+# TODO attempt to make the clustering algorithm distance-agnostic.
 
 import threading
 import time
