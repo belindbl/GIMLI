@@ -9,8 +9,6 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 ### 1.1 Overview
 - **Purpose:**  
   GIMLI integrates LIDAR and camera sensor data to deliver real-time obstacle detection, classification, and decision-making for safe maritime navigation.
-- **Target Audience:**  
-  Maritime system developers, researchers in autonomous navigation, and graduate students exploring sensor fusion.
 
 ### 1.2 Key Objectives
 - Implement reliable collision avoidance via sensor fusion.
