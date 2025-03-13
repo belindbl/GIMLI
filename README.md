@@ -108,7 +108,7 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 1. **Run the Main Script:**    
 Execute the final code to start the sensor fusion and visualisation processes:
 ```bash
-python main.py
+python \GIMLI\Python\CustomScripts\GIMLI\RTDP10.py
 ```
 2. **Monitoring Output:**   
 - A window should display the camera feed overlaid with the projected LiDAR points and annotation texts.
