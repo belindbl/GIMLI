@@ -102,7 +102,7 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 
 ### 4.1 Starting the Simulator
 - Launch the AILiveSim executable.
-- Ensure the simulator is running and that the correct scenario (e.g., 'DemoAllSensors') is loaded.
+- Ensure the simulator is running and that the desired  scenario (e.g., 'DemoAllSensors') is loaded.
 
 ### 4.2 Launching GIMLI
 
