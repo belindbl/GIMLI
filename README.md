@@ -1,6 +1,6 @@
-# Project GIMLI User Guide
+# GIMLI Installation and User Guide
 
-GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solution developed to provide collision avoidance and navigation support for a semi-autonomous vessel. This guide outlines the necessary components, installation steps, configuration details, and instructions for running the solution in a simulated environment.
+GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solution developed to navigation support for a semi-autonomous vessel. This guide outlines the necessary components, installation steps, configuration details, and instructions for running the solution in a simulated environment.
 
 ---
 
@@ -8,12 +8,11 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 
 ### 1.1 Overview
 - **Purpose:**  
-  GIMLI integrates LIDAR and camera sensor data to deliver real-time obstacle detection, classification, and decision-making for safe maritime navigation.
+  GIMLI integrates LIDAR and camera sensor data to deliver real-time obstacle detection and classification for safe maritime navigation.
 
 ### 1.2 Key Objectives
-- Implement reliable collision avoidance via sensor fusion.
 - Synchronise real-time image and LIDAR data.
-- Facilitate autonomous decision-making and waypoint navigation.
+- Facilitate autonomous vessel and obstacle tracking.
 - Integrate and validate the system using the **AILiveSim** simulator.
 
 ---
@@ -30,7 +29,7 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 
 ### 2.2 Software Libraries
 - **Python Dependencies:**  
-  All required Python libraries are listed in the `requirements.txt` file, generated via `pip freeze > requirements.txt`.
+  All required Python libraries are listed in the `requirements.txt` file.
 - **Key Modules:**  
   - **ALSLib:** For sensor data acquisition and control.
   - **Open3D & OpenCV:** For 3D visualisation and image processing.
@@ -59,7 +58,7 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 
 ### 3.1 Prerequisites
 - **Hardware:**  
-  A computer capable of running the simulator and processing real-time sensor data.
+  A system capable of running the simulator and process real-time sensor data.
 - **Operating System:**  
   Any OS that supports Python and the AILiveSim simulator.
 - **Software Requirements:**  
@@ -82,13 +81,17 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 2. **Create a virtual environment:**
    ```bash
    python -m venv venv
-   source venv/bin/activate # On Windows: venv\Scripts\activate
+   ```
+   Then activate the virtual environment:
+   ```
+   venv\Scripts\activate
    ```
 3. **Install dependencies:**
-   Make sure the `requirements.txt` file is up-to-date, then run:
-   ```bash
+      ```bash
    pip install -r requirements.txt
    ```
+   This ensures all necessary dependencies are installed.
+
 ### 3.4 Configuring Simulation Files
 - **Edit Config Files:**   
    Locate and adjust the simulation configuration files (e.g., sensor settings, extrinsic/intrinsic parameters) as necessary.
@@ -113,3 +116,4 @@ python \GIMLI\Python\CustomScripts\GIMLI\RTDP10.py
 - A separate window will visualise the point cloud in real time.
 3. **User Interaction:**    
 Use the interface to monitor real-time data fusion and observe obstacle detection and collision avoidance overlays.
+
