@@ -13,7 +13,6 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 ### 1.2 Key Objectives
 - Implement reliable obstacle detection via sensor fusion.
 - Synchronise real-time image and LIDAR data.
-- Facilitate autonomous decision-making and waypoint navigation.
 - Integrate and validate the system using the **AILiveSim** simulator.
 
 ---
