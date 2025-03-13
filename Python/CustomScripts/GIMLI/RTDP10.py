@@ -1,5 +1,5 @@
 '''
-Main script
+Experimental script to make the clustering dynamic based on distance from the boat.
 
 This script loads the custom scenario "Aboat" and connects to the camera and LiDAR sensors.
 It starts separate threads for reading and processing camera and LiDAR data.
@@ -57,21 +57,17 @@ class TestContext:
 ALSweights = "E:/Team1Docs/yolov5/weights_ailivesim/best.pt"
 MixedWeights = "E:/Team1Docs/yolov5/weights_mixed/best.pt"
 
-RADIUS_EARTH = 637100000  # Earth's radius in centimeters
+RADIUS = 637100000  # Earth's radius in centimeters
 
 def linear_to_angular_distance(linear_distance_cm):
     """
-    Converts a linear distance (in centimeters) to an angular distance in minutes.
-    The conversion is based on the Earth's radius.
-
-    Parameters:
-        linear_distance_cm (float): Linear distance in centimeters.
+    Converts a linear distance to an angular distance in minutes.
         
     Returns:
         angular_distance_minutes (float): Angular distance in minutes (1 degree = 60 minutes).
     """
     # Convert linear distance to angular distance in degrees
-    angular_distance_degrees = (linear_distance_cm / RADIUS_EARTH) * (180 / np.pi)
+    angular_distance_degrees = (linear_distance_cm / RADIUS) * (180 / np.pi)
     # Convert degrees to minutes (1 degree = 60 minutes)
     angular_distance_minutes = angular_distance_degrees * 60
     return angular_distance_minutes
@@ -80,12 +76,6 @@ def apply_clahe(image):
     """
     Applies Contrast Limited Adaptive Histogram Equalization (CLAHE) to enhance the image.
     This improves the contrast of the image for better YOLO object detection.
-
-    Parameters:
-        image (numpy.ndarray): Input image in BGR format.
-    
-    Returns:
-        image (numpy.ndarray): Enhanced image in BGR format.
     """
     lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)    # Convert image to LAB color space
     l, a, b = cv2.split(lab)                         # Split channels
@@ -100,12 +90,9 @@ def apply_clahe(image):
 def overlay_lidar_on_camera_thread():
     """
     This thread fetches the latest camera image and LiDAR data,
-    projects the LiDAR 3D points onto the 2D image using the camera's calibration parameters,
-    and overlays the projected points along with computed distance and angle information.
-    The overlay text is updated every 1.5 seconds and positioned 40 pixels above the detected objects.
     """
     global overlay_texts
-    # Set camera calibration parameters
+    # Camera calibration parameters
     image_width, image_height = 720, 480
     fov_angle = 90
     focal_length = image_width / (2 * np.tan(np.radians(fov_angle) / 2))
@@ -262,7 +249,7 @@ def process_frame(image, model):
         processed_image (numpy.ndarray): The image with rendered detection outputs.
         results: The raw results object from the YOLOv5 model.
     """
-    # Convert image to RGB if necessary
+    # Convert image to RGB
     if len(image.shape) == 2:
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     elif image.shape[2] == 4:
@@ -272,11 +259,8 @@ def process_frame(image, model):
     # Convert the processed image back to RGBA for consistency
     return cv2.cvtColor(processed_image, cv2.COLOR_RGB2RGBA), results
 
+# Inference thread which loads the model and processes frames
 def yolo_inference_thread():
-    """
-    This thread loads the YOLOv5 model and continuously processes camera frames from the frame queue.
-    It applies image enhancement, performs object detection, and stores the processed image for later use.
-    """
     print("Loading YOLOv5 model in YOLO thread...", flush=True)
     try:
         # Load custom YOLOv5 model using Torch Hub
@@ -511,7 +495,7 @@ def lidar_processing_thread():
     point_cloud_added = False
 
     tracked_clusters = {}  # Dictionary for storing previously tracked cluster centroids
-    next_cluster_id = 0    # Counter for assigning new persistent IDs
+    next_cluster_id = 0 # Counter for assigning new persistent IDs
     max_tracking_distance = 600  # Maximum distance (in meters) for tracking clusters
 
     custom_colors = {
@@ -523,7 +507,7 @@ def lidar_processing_thread():
 
     eps = 200  # DBSCAN parameter: maximum distance between points in a cluster
     min_coords = np.array([-206, -159, 162])  # Minimum coordinates to filter boat points
-    max_coords = np.array([513, 159, 321])     # Maximum coordinates to filter boat points
+    max_coords = np.array([513, 159, 321]) # Maximum coordinates to filter boat points
 
     while not stop_threads_event.is_set():
         with data_lock:
@@ -606,13 +590,7 @@ def lidar_data_reader():
 # Main Script Initialization#
 #############################
 if __name__ == "__main__":
-    """
-    Main entry point of the program:
-    - Connects to the simulation scenario "Aboat".
-    - Retrieves sensor configuration and sets up the camera and LiDAR connections.
-    - Starts individual threads for reading, processing, and visualizing sensor data.
-    - Waits for a keyboard interrupt (Ctrl+C) to cleanly shutdown all threads.
-    """
+    # Connects to the simulation and loads the specified custom scenario
     TestContext.client.connect()
     TestContext.client.request_load_scenario('Aboat')
     time.sleep(1)
