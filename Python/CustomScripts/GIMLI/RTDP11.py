@@ -1,3 +1,5 @@
+'''Experimental version'''
+
 # TODO Attempt to make the clustering algorithm distance-agnostic.
 # TODO Verify that the overlay thread is working after breaking it down into smaller helper functions
 
