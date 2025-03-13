@@ -1,4 +1,12 @@
-# This code implements the whole pipeline including object tracking (distance in meters, and angle in degrees)
+'''
+Main script.
+
+This script loads the custom scenario "Aboat" and connects to the camera and LiDAR sensors.
+It starts separate threads for reading and processing camera and LiDAR data.
+The camera thread processes the camera data and runs YOLOv5 object detection on the frames.
+The LiDAR thread processes the LiDAR data, performs DBSCAN clustering, and visualizes the point cloud.
+The overlay thread projects the LiDAR points onto the camera image and overlays the relative distance and angle.
+'''
 
 import threading
 import time
@@ -12,7 +20,6 @@ import ALSLib.ALSHelperFunctionLibrary as ALSFunc
 import ALSLib.ALSHelperImageLibrary as ALSImg
 import torch
 import cv2
-import os
 import queue
 from sklearn.cluster import DBSCAN
 
@@ -64,10 +71,6 @@ def overlay_lidar_on_camera_thread():
     This thread fetches the latest camera image and LiDAR data,
     projects the LiDAR 3D points onto the 2D image using camera calibration,
     and overlays the points onto the image.
-    It also overlays the relative distance and angle (updated every 1.5 sec)
-    computed from the cluster centroids. The text persists until updated,
-    is drawn without a background in black using FONT_HERSHEY_COMPLEX_SMALL at a smaller size,
-    and is positioned 40 pixels above the objects.
     """
     global overlay_texts
     # Camera calibration parameters
@@ -288,6 +291,9 @@ def camera_processing_thread():
 # LiDAR Processing Helpers  #
 #############################
 def setup_visualizer():
+    """
+    Setup Open3D visualizer for LiDAR point cloud visualization.
+    """
     vis = o3d.visualization.Visualizer()
     vis.create_window(width=900, height=700, window_name="PCD Visualisation")
     render_option = vis.get_render_option()
@@ -305,6 +311,9 @@ def setup_visualizer():
     return vis, point_cloud, ctr
 
 def filter_boat_points(points, min_coords, max_coords):
+    """
+    Filter points within the boat bounding box.
+    """
     mask = ~(
         (points[:, 0] >= min_coords[0]) & (points[:, 0] <= max_coords[0]) &
         (points[:, 1] >= min_coords[1]) & (points[:, 1] <= max_coords[1]) &
@@ -313,6 +322,9 @@ def filter_boat_points(points, min_coords, max_coords):
     return mask, points[mask]
 
 def compute_cluster_centroids(filtered_points, labels):
+    """
+    Compute cluster centroids from DBSCAN labels.
+    """
     centroids = {}
     for label in np.unique(labels):
         if label == -1:
@@ -322,6 +334,9 @@ def compute_cluster_centroids(filtered_points, labels):
     return centroids
 
 def update_persistent_ids(new_centroids, tracked_clusters, next_cluster_id, max_tracking_distance):
+    """
+    Update persistent IDs for clusters based on the new centroids.
+    """
     persistent_ids = {}
     for label, centroid in new_centroids.items():
         best_match = None
@@ -341,6 +356,9 @@ def update_persistent_ids(new_centroids, tracked_clusters, next_cluster_id, max_
     return persistent_ids, tracked_clusters, next_cluster_id
 
 def assign_cluster_colors(points, mask, labels, persistent_ids, custom_colors):
+    """
+    Assign colors to points based on DBSCAN labels and persistent IDs.
+    """
     point_colors = np.zeros((points.shape[0], 3))
     point_colors[~mask] = [0, 0, 0.5]
     filtered_indices = np.where(mask)[0]
@@ -361,6 +379,10 @@ def assign_cluster_colors(points, mask, labels, persistent_ids, custom_colors):
 # LiDAR Processing Thread   #
 #############################
 def lidar_processing_thread():
+    """
+    This thread processes LiDAR data, performs DBSCAN clustering,
+    and visualizes the point cloud using Open3D.
+    """
     global latest_centroids
     vis, point_cloud, ctr = setup_visualizer()
     point_cloud_added = False
@@ -376,9 +398,11 @@ def lidar_processing_thread():
         9: [1, 0.75, 0]
     }
 
-    eps = 200
+    eps = 200 # DBSCAN parameter to determine neighborhood size
+
+    # Boat bounding box exclusion
     min_coords = np.array([-206, -159, 162])
-    max_coords = np.array([513, 159, 321])
+    max_coords = np.array([513, 159, 321]) 
 
     while not stop_threads_event.is_set():
         with data_lock:
@@ -489,3 +513,4 @@ if __name__ == "__main__":
         camera_processor_thread.join()
         lidar_processor_thread.join()
         overlay_thread.join()
+        yolo_thread.join()

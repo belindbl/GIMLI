@@ -1,5 +1,5 @@
 '''
-Experimental script to make the clustering dynamic based on distance from the boat.
+Experimental script to make the clustering dynamic based on the distance from the boat.
 
 This script loads the custom scenario "Aboat" and connects to the camera and LiDAR sensors.
 It starts separate threads for reading and processing camera and LiDAR data.
