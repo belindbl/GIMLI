@@ -48,6 +48,8 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
   - Data acquisition threads.
   - Sensor fusion and calibration modules.
   - YOLO inference integration.
+  - Point cloud clustering.
+  - Object tracking.
   - Visualisation components.
 - **Code Location:**  
   The code is provided within this repository along with this guide.
@@ -58,7 +60,7 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 
 ### 3.1 Prerequisites
 - **Hardware:**  
-  A system capable of running the simulator and process real-time sensor data.
+  A system capable of running the simulator (ensure your system meets the hardware specifications as per AILiveSim) and process real-time sensor data.
 - **Operating System:**  
   Any OS that supports Python and the AILiveSim simulator.
 - **Software Requirements:**  
@@ -102,12 +104,12 @@ GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solu
 
 ### 4.1 Starting the Simulator
 - Launch the AILiveSim executable.
-- Ensure the simulator is running and that the desired  scenario (e.g., 'DemoAllSensors') is loaded.
+- Ensure the simulator is running and that the desired scenario (e.g., 'ABoat') is loaded.
 
 ### 4.2 Launching GIMLI
 
 1. **Run the Main Script:**    
-Execute the final code to start the sensor fusion and visualisation processes:  
+Execute the final code to start the sensor fusion and visualisation processes (automatically loads a predetermined scenario):  
 ```bash
 python \GIMLI\Python\CustomScripts\GIMLI\RTDP9.py # RTDP9 is the current main script
 ```
@@ -117,4 +119,3 @@ python \GIMLI\Python\CustomScripts\GIMLI\RTDP9.py # RTDP9 is the current main sc
 - A separate window will visualise the point cloud in real time.
 3. **User Interaction:**    
 Use the interface to monitor real-time data fusion and observe obstacle detection and collision avoidance overlays.
-
