@@ -1,34 +1,117 @@
-# Project GIMLI
+# Project GIMLI User Guide
 
-GIMLI (Guided Integrated Maritime Logistics and Intelligence), undertaken as part of a project course for first-year graduate students. This project focuses on developing navigation and collision avoidance systems for a semi-autonomous vessel designed to operate in maritime environments.
+GIMLI (Guided Integrated Maritime Logistics and Intelligence) is a software solution developed to provide collision avoidance and navigation support for a semi-autonomous vessel. This guide outlines the necessary components, installation steps, configuration details, and instructions for running the solution in a simulated environment.
 
-## Objectives
-- To design and implement a reliable collision avoidance system utilising sensor fusion, including **LIDAR** and multiple cameras for a 360-degree spatial awareness for the Åboat.
-- To synchronise real-time image and LIDAR data for accurate detection and classification of obstacles, such as other vessels, rocks, and shoreline features.
-- To ensure seamless integration with waypoint-following capabilities, for navigation.
-- To develop and refine algorithms that enable the Åboat to make autonomous decisions for safe and efficient navigation in dynamic environments (under supervision).
+---
 
-## (Planned) Features
-1. **Real-Time Obstacle Detection**:
-   - Utilising a combination of LIDAR sensors and camera feeds to identify potential collisions and objects in the water.
-   - Processing data in real-time to detect, classify, and map obstacles.
+## 1. Introduction
 
-2. **Autonomous Decision-Making**:
-   - Algorithms capable of dynamically rerouting the vessel to avoid obstacles and maintain the planned course.
-   - Fail-safe mechanisms to minimise risks in unexpected scenarios.
+### 1.1 Overview
+- **Purpose:**  
+  GIMLI integrates LIDAR and camera sensor data to deliver real-time obstacle detection, classification, and decision-making for safe maritime navigation.
+- **Target Audience:**  
+  Maritime system developers, researchers in autonomous navigation, and graduate students exploring sensor fusion.
 
-3. **Simulator Integration**:
-   - Testing and refining the system in a virtual maritime environment using the **AILiveSim** simulator integrated with Unreal Engine 4.
-   - Simulating real-world scenarios to validate system performance before physical deployment and evaluation.
-  
-## Future Development
-1. Hardware agnostic implementation in ROS which would enable the software to be integrated into different systems more easily.
+### 1.2 Key Objectives
+- Implement reliable collision avoidance via sensor fusion.
+- Synchronise real-time image and LIDAR data.
+- Facilitate autonomous decision-making and waypoint navigation.
+- Integrate and validate the system using the **AILiveSim** simulator.
 
-# Setup and running the program
-1. Get a valid license by contacting [AILiveSim](https://www.ailivesim.com/).
-2. Compatible with ALS v1.9.7 (and possibly others, assuming the codebase is compatible with the ALSLib module).
-3. Install the simulator by following the instructions in the [AILiveSim documentation](https://portal.ailivesim.com/documentation)
-4. Install the required dependencies in a virtual environment by running ```pip install -r requirements.txt``` in an active virtual environment.
-5. ...
-6. Start the AILiveSim executable
-7. ...
+---
+
+## 2. System Components
+
+### 2.1 Simulator: AILiveSim
+- **Description:**  
+  AILiveSim provides a realistic maritime simulation environment built on Unreal Engine 4.
+- **License Requirement:**  
+  A valid product key is required. Contact [AILiveSim](https://www.ailivesim.com/) for licensing details.
+- **Documentation:**  
+  Follow the instructions in the [AILiveSim documentation](https://portal.ailivesim.com/documentation).
+
+### 2.2 Software Libraries
+- **Python Dependencies:**  
+  All required Python libraries are listed in the `requirements.txt` file, generated via `pip freeze > requirements.txt`.
+- **Key Modules:**  
+  - **ALSLib:** For sensor data acquisition and control.
+  - **Open3D & OpenCV:** For 3D visualisation and image processing.
+  - **PyTorch & YOLOv5:** For object detection within the camera feed.
+  - **Scikit-learn:** For DBSCAN clustering.
+
+### 2.3 Configuration Files
+- **Simulation Configuration:**  
+  Underlying config files (e.g., sensor settings, extrinsic/intrinsic parameters) must be set up as required.
+- **User Modifications:**  
+  Adjust file paths and sensor configurations within these files to match your environment.
+
+### 2.4 Final Code
+- **Project Repository:**  
+  Contains the complete implementation including:
+  - Data acquisition threads.
+  - Sensor fusion and calibration modules.
+  - YOLO inference integration.
+  - Visualisation components.
+- **Code Location:**  
+  The code is provided within this repository along with this guide.
+
+---
+
+## 3. Setup and Installation
+
+### 3.1 Prerequisites
+- **Hardware:**  
+  A computer capable of running the simulator and processing real-time sensor data.
+- **Operating System:**  
+  Any OS that supports Python and the AILiveSim simulator.
+- **Software Requirements:**  
+  - Python 3.11.9 or newer.
+
+### 3.2 Installing AILiveSim
+1. **Obtain License:**  
+   Contact [AILiveSim](https://www.ailivesim.com/) to receive a valid product key.
+2. **Download & Install:**  
+   Follow the AILiveSim documentation to install the simulator on your machine.
+3. **Activate Simulator:**  
+   Place the license key in the approapriate folder and start the AILiveSim executable.
+
+### 3.3 Setting Up the Python Environment
+1. **Clone the Repository:**  
+   ```bash
+   git clone https://github.com/belindbl/gimli.git
+   cd gimli
+   ```
+2. **Create a virtual environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate # On Windows: venv\Scripts\activate
+   ```
+3. **Install dependencies:**
+   Make sure the `requirements.txt` file is up-to-date, then run:
+   ```bash
+   pip install -r requirements.txt
+   ```
+### 3.4 Configuring Simulation Files
+- **Edit Config Files:**   
+   Locate and adjust the simulation configuration files (e.g., sensor settings, extrinsic/intrinsic parameters) as necessary.
+- **Verify Settings:**  
+   Ensure that the sensor configuration matches the setup described in the project.
+---
+## 4. Executing the Final Code
+
+### 4.1 Starting the Simulator
+- Launch the AILiveSim executable.
+- Ensure the simulator is running and that the correct scenario (e.g., 'DemoAllSensors') is loaded.
+
+### 4.2 Launching GIMLI
+
+1. **Run the Main Script:**    
+Execute the final code to start the sensor fusion and visualisation processes:
+```bash
+python main.py
+```
+2. **Monitoring Output:**   
+- A window should display the camera feed overlaid with the projected LiDAR points and annotation texts.
+- A separate window will visualise the point cloud in real time.
+3. **User Interaction:**    
+Use the interface to monitor real-time data fusion and observe obstacle detection and collision avoidance overlays.

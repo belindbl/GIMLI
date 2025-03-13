@@ -1,4 +1,10 @@
-# TODO attempt to make the clustering algorithm distance-agnostic.
+'''Main script
+
+This script loads the custom scenario "Aboat" and connects to the camera and LiDAR sensors.
+It starts separate threads for reading and processing camera and LiDAR data.
+The camera thread processes the camera data and runs YOLOv5 object detection on the frames.
+The LiDAR thread processes the LiDAR data, performs DBSCAN clustering, and visualizes the point cloud.
+The overlay thread projects the LiDAR points onto the camera image and overlays the relative distance and angle.'''
 
 import threading
 import time
